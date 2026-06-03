@@ -51,14 +51,41 @@
         }
         .time-block {
             display: flex;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             border-bottom: 1px dashed #eee;
-            padding-bottom: 10px;
+            padding-bottom: 15px;
         }
         .time {
             font-weight: bold;
             color: var(--primary);
             min-width: 70px;
+            padding-top: 5px;
+        }
+        .content-area {
+            flex-grow: 1;
+        }
+        /* 新增：景點專屬快捷按鈕的樣式 */
+        .action-links {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .action-links a {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.85em;
+            padding: 5px 10px;
+            background-color: #E1F5FE;
+            color: #0277BD;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+        .action-links a:hover {
+            background-color: #B3E5FC;
+            transform: translateY(-1px);
         }
         .shopping-list {
             background-color: #FFF3CD;
@@ -91,12 +118,12 @@
             transform: translateY(-2px);
         }
         .tag {
-            background: #E1F5FE;
-            color: #0277BD;
+            background: #F5F5F5;
+            color: #616161;
             padding: 3px 8px;
             border-radius: 12px;
-            font-size: 0.85em;
-            margin-right: 5px;
+            font-size: 0.8em;
+            margin-left: 5px;
         }
         .tag-discount {
             background: #FFEBEE;
@@ -132,47 +159,77 @@
         <h2>🗓️ Day 1：6/19 (極速踩點與血拚之夜)</h2>
         <div class="time-block">
             <div class="time">15:00</div>
-            <div>
-                <strong>🛳️ 碼頭出發 & 波上宮</strong><br>
-                最晚15:00完成下島[cite: 1]。直接搭乘計程車前往那霸郵輪碼頭旁邊的<b>波上宮神社</b>（車程約5分鐘，走路15分）[cite: 1]。快速參拜、購買御守，欣賞懸崖上的神社美景[cite: 1]。<span class="tag">景點</span>
+            <div class="content-area">
+                <strong>🛳️ 波上宮神社</strong><span class="tag">景點</span><br>
+                最晚15:00完成下島。直接搭乘計程車前往那霸郵輪碼頭旁邊的波上宮（車程約5分鐘）。快速參拜、購買御守，欣賞懸崖上的神社美景。
+                <div class="action-links">
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=波上宮,那霸" target="_blank">📍 從目前位置導航</a>
+                    <a href="https://www.google.com/search?q=沖繩+波上宮+參拜時間" target="_blank">🔍 相關搜尋</a>
+                    <a href="http://naminouegu.jp/" target="_blank">🌐 官方網站</a>
+                </div>
             </div>
         </div>
         <div class="time-block">
             <div class="time">16:00</div>
-            <div>
-                <strong>🏨 飯店寄放行李</strong><br>
-                搭乘計程車前往國際通的 <b>Hotel Lantana Naha Kokusai-Dori</b> 辦理 Check-in 並卸下行李，讓您雙手空空好逛街！[cite: 1]<span class="tag">住宿</span>
+            <div class="content-area">
+                <strong>🏨 Hotel Lantana Naha Kokusai-Dori</strong><span class="tag">住宿</span><br>
+                搭乘計程車前往國際通的飯店辦理 Check-in 並卸下行李，讓您雙手空空好逛街！
+                <div class="action-links">
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=Hotel+Lantana+Naha+Kokusai-Dori" target="_blank">📍 從目前位置導航</a>
+                    <a href="https://www.google.com/search?q=Hotel+Lantana+Naha+Kokusai-Dori+評價" target="_blank">🔍 相關搜尋</a>
+                    <a href="https://hotel-lantana.jp/naha/" target="_blank">🌐 官方網站</a>
+                </div>
             </div>
         </div>
         <div class="time-block">
             <div class="time">16:40</div>
-            <div>
-                <strong>🌅 瀨長島 Umikaji Terrace</strong><br>
-                從「縣廳前站」或「牧志站」搭乘單軌電車至「赤嶺站」，轉乘 TK02 巴士或直接叫計程車（省時推薦）前往瀨長島[cite: 1]。享受希臘風情純白建築，看夕陽與飛機起降[cite: 1]。<span class="tag">景點</span>
+            <div class="content-area">
+                <strong>🌅 瀨長島 Umikaji Terrace</strong><span class="tag">景點</span><br>
+                從「縣廳前站」搭乘單軌至「赤嶺站」，轉乘巴士或叫計程車前往。享受希臘風情純白建築，看夕陽與飛機起降。
+                <div class="action-links">
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=瀨長島+Umikaji+Terrace" target="_blank">📍 從目前位置導航</a>
+                    <a href="https://www.google.com/search?q=瀨長島+Umikaji+Terrace+必吃" target="_blank">🔍 相關搜尋</a>
+                    <a href="https://www.umikajiterrace.com/" target="_blank">🌐 官方網站</a>
+                </div>
             </div>
         </div>
         <div class="time-block">
             <div class="time">18:30</div>
-            <div>
-                <strong>🧸 漫畫倉庫 那霸店</strong><br>
-                從瀨長島回到赤嶺站周邊[cite: 1]。步行前往「漫畫倉庫那霸店」，這裡是尋寶天堂！[cite: 1]<br>
-                🛒 <b>購物任務：</b>鎖定二手玩具區尋找<b>「賽馬娘公仔」</b>[cite: 1]。<span class="tag">購物</span>
+            <div class="content-area">
+                <strong>🧸 漫畫倉庫 那霸店</strong><span class="tag">購物</span><br>
+                從瀨長島回到赤嶺站周邊步行前往，這裡是尋寶天堂！<br>
+                🛒 <b>任務：</b>鎖定二手玩具區尋找「賽馬娘公仔」。
+                <div class="action-links">
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=マンガ倉庫+那覇店" target="_blank">📍 從目前位置導航</a>
+                    <a href="https://www.google.com/search?q=漫畫倉庫+那霸店+免稅" target="_blank">🔍 相關搜尋</a>
+                    <a href="https://mangasouko-okinawa.com/" target="_blank">🌐 官方網站</a>
+                </div>
             </div>
         </div>
         <div class="time-block">
             <div class="time">19:30</div>
-            <div>
-                <strong>🛍️ 小祿 AEON 購物與晚餐</strong><br>
-                從漫畫倉庫步行約10分鐘，或搭一站單軌抵達「小祿站」[cite: 1]。在 AEON 商場內或旁邊的「通堂拉麵」享用晚餐[cite: 1]。<br>
-                🛒 <b>購物任務：</b>AEON 玩具部尋找<b>「皮克敏周邊」</b>、鞋區看<b>「運動鞋」</b>、皮件專櫃挑選<b>「男士皮長夾」</b>[cite: 1]。<span class="tag">購物</span>
+            <div class="content-area">
+                <strong>🛍️ 小祿 AEON 購物與晚餐</strong><span class="tag">購物</span><br>
+                搭一站單軌或步行抵達。在 AEON 或旁邊的通堂拉麵享用晚餐。<br>
+                🛒 <b>任務：</b>尋找皮克敏周邊、運動鞋、男士皮長夾。
+                <div class="action-links">
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=AEON+那霸店" target="_blank">📍 從目前位置導航</a>
+                    <a href="https://www.google.com/search?q=小祿+AEON+必買" target="_blank">🔍 相關搜尋</a>
+                    <a href="https://www.aeon-ryukyu.jp/store/aeon/naha/" target="_blank">🌐 官方網站</a>
+                </div>
             </div>
         </div>
         <div class="time-block">
             <div class="time">22:00</div>
-            <div>
-                <strong>🐧 唐吉軻德 國際通店</strong><br>
-                搭乘單軌回國際通[cite: 1]。這家唐吉軻德營業到超晚！[cite: 1]<br>
-                🛒 <b>購物任務：</b>這裡可以尋找<b>「水冷工作服」</b>（夏季常設於工具/電器區）、補齊零食伴手禮，並完成免稅退稅[cite: 1]。<span class="tag">購物</span>
+            <div class="content-area">
+                <strong>🐧 唐吉軻德 國際通店</strong><span class="tag">購物</span><br>
+                搭乘單軌回國際通。這家唐吉軻德營業到超晚！<br>
+                🛒 <b>任務：</b>尋找水冷工作服，並完成免稅退稅。
+                <div class="action-links">
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=ドン・キホーテ+那覇国際通り店" target="_blank">📍 從目前位置導航</a>
+                    <a href="https://www.google.com/search?q=唐吉軻德+國際通+退稅" target="_blank">🔍 相關搜尋</a>
+                    <a href="https://www.donki.com/store/shop_detail.php?shop_id=323" target="_blank">🌐 官方網站</a>
+                </div>
             </div>
         </div>
     </div>
@@ -182,64 +239,49 @@
         <h2>🗓️ Day 2：6/20 (從容準備回程)</h2>
         <div class="time-block">
             <div class="time">08:30</div>
-            <div>
+            <div class="content-area">
                 <strong>🍳 享用早餐 & 最後補買</strong><br>
-                在飯店周邊享用早餐，若昨晚有遺漏的藥妝，可在國際通早上有開的藥妝店快速補齊[cite: 1]。
+                在飯店周邊享用早餐，若有遺漏的藥妝，可在國際通早上有開的藥妝店快速補齊。
             </div>
         </div>
         <div class="time-block">
             <div class="time">10:30</div>
-            <div>
-                <strong>🚕 啟程前往郵輪碼頭</strong><br>
-                考量到您帶著大量戰利品，強烈建議從飯店直接搭乘計程車前往碼頭（車資約1000-1500日圓），輕鬆省力，務必在11:00前抵達碼頭辦理手續[cite: 1]。
+            <div class="content-area">
+                <strong>🚕 啟程前往那霸郵輪碼頭</strong><br>
+                強烈建議從飯店直接搭乘計程車前往碼頭（車資約1000-1500日圓），輕鬆省力。
+                <div class="action-links">
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=那覇クルーズターミナル" target="_blank">📍 從目前位置導航至碼頭</a>
+                </div>
             </div>
         </div>
-        <div class="time-block">
+        <div class="time-block" style="border-bottom: none;">
             <div class="time">12:00</div>
-            <div>
+            <div class="content-area">
                 <strong>🚢 郵輪離島</strong><br>
-                最晚12:00離島，帶著滿滿的回憶與戰利品平安返航！[cite: 1]
+                最晚12:00離島，帶著滿滿的回憶與戰利品平安返航！
             </div>
         </div>
-    </div>
-
-    <!-- 必買清單追蹤 -->
-    <div class="shopping-list">
-        <h3>📝 必買清單精準攻略地圖</h3>
-        <ul style="list-style-type: none; padding-left: 0;">
-            <li>✅ <b>皮克敏周邊：</b> 首選 <i>小祿 AEON 玩具區</i> 或 <i>唐吉軻德</i>[cite: 1]。</li>
-            <li>✅ <b>運動鞋：</b> <i>小祿 AEON</i> 內的鞋區或國際通的 ABC-Mart[cite: 1]。</li>
-            <li>✅ <b>男士皮長夾：</b> <i>小祿 AEON</i> 一樓皮件專櫃，款式實用且具備免稅服務[cite: 1]。</li>
-            <li>✅ <b>水冷工作服：</b> 夏季熱門商品！請在 <i>唐吉軻德 國際通店</i> 的電器/五金生活區尋找[cite: 1]。</li>
-            <li>✅ <b>賽馬娘公仔：</b> <i>漫畫倉庫 那霸店</i> 二手模型區，保證讓您挑到眼花撩亂！[cite: 1]</li>
-        </ul>
     </div>
 
     <!-- 智慧工具列 -->
     <div class="card">
-        <h3>🛠️ 智慧旅遊工具列 (一鍵點擊)</h3>
-        <p>請點擊下方按鈕開啟對應的智慧導航與追蹤功能：</p>
+        <h3>🛠️ 智慧旅遊全局工具</h3>
         <div class="tools-grid">
-            <!-- 帶入所有行程節點的 Google Maps 導航 -->
-            <a href="https://www.google.com/maps/dir/?api=1&origin=那覇クルーズターミナル&destination=ドン・キホーテ+那覇国際通り店&waypoints=波上宮|ホテルランタナ那覇国際通り|瀬長島ウミカジテラス|マンガ倉庫+那覇店|イオン+那覇店" target="_blank" class="btn-tool">🗺️ 行程專屬路線導航</a>
-            
-            <!-- 根據當下 GPS 尋找周圍餐廳 -->
+            <a href="https://www.google.com/maps/dir/?api=1&origin=那覇クルーズターミナル&destination=ドン・キホーテ+那覇国際通り店&waypoints=波上宮|ホテルランタナ那覇国際通り|瀬長島ウミカジテラス|マンガ倉庫+那覇店|イオン+那覇店" target="_blank" class="btn-tool">🗺️ 全程路線總覽</a>
             <a href="https://www.google.com/maps/search/?api=1&query=餐廳" target="_blank" class="btn-tool">🍽️ 搜尋目前周圍餐廳</a>
-            
-            <!-- 沖繩官方公車即時動態追蹤 (のりもの NAVI) -->
             <a href="https://www.busnavi-okinawa.com/top/" target="_blank" class="btn-tool">🚆 沖繩公車即時動態</a>
         </div>
     </div>
 
 </div>
 
-<!-- Service Worker 註冊移至 body 結尾，確保 HTML 解析正確 -->
+<!-- Service Worker -->
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js')
                 .then(registration => {
-                    console.log('離線守護神啟動成功！範圍：', registration.scope);
+                    console.log('離線守護神啟動成功！');
                 })
                 .catch(error => {
                     console.log('離線守護神啟動失敗：', error);
