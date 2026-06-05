@@ -7,6 +7,8 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0078D7">
     <link rel="apple-touch-icon" href="icon-192.png">
+    <!-- 本次造訪若已進過行程（例如點外部連結後返回），在繪製前就標記略過首頁，避免閃一下 -->
+    <script>try{if(sessionStorage.getItem('okinawaEntered')==='1')document.documentElement.classList.add('skip-welcome');}catch(e){}</script>
     <style>
         :root {
             --primary: #0078D7;
@@ -255,6 +257,8 @@
             visibility: hidden;
             pointer-events: none;
         }
+        /* 返回造訪：直接隱藏首頁、不播放動畫 */
+        html.skip-welcome .welcome { display: none !important; }
         .welcome-logo {
             line-height: 1;
             animation: floatLogo 3.5s ease-in-out infinite;
@@ -663,18 +667,46 @@
 
 </div>
 
-<!-- 起始首頁：點按鈕後淡出 -->
+<!-- 起始首頁：第一次進入才顯示；點外部連結返回時直接略過並回到原位置 -->
 <script>
     (function () {
         var welcome = document.getElementById('welcome');
         var startBtn = document.getElementById('startBtn');
-        function enter() {
+        var ENTER_KEY  = 'okinawaEntered';
+        var SCROLL_KEY = 'okinawaScroll';
+
+        function read(k){ try { return sessionStorage.getItem(k); } catch(e){ return null; } }
+        function write(k,v){ try { sessionStorage.setItem(k, v); } catch(e){} }
+
+        // 本次造訪是否已進過行程（由 <head> 的早期腳本標記）
+        var skipped = document.documentElement.classList.contains('skip-welcome') || read(ENTER_KEY) === '1';
+
+        if (skipped) {
+            // 直接顯示行程，不鎖捲動，並還原離開前的位置
+            welcome.style.display = 'none';
+            document.body.style.overflow = '';
+            var y = parseInt(read(SCROLL_KEY) || '0', 10);
+            if (y > 0) {
+                // 等版面就緒後再捲動，確保停在原本點連結的畫面
+                requestAnimationFrame(function(){ window.scrollTo(0, y); });
+            }
+        } else {
+            // 首次進入：顯示首頁並鎖住背景捲動
+            document.body.style.overflow = 'hidden';
+        }
+
+        startBtn.addEventListener('click', function () {
             welcome.classList.add('hidden');
             document.body.style.overflow = '';
-        }
-        // 顯示首頁時鎖住背景捲動
-        document.body.style.overflow = 'hidden';
-        startBtn.addEventListener('click', enter);
+            write(ENTER_KEY, '1');
+        });
+
+        // 離開頁面前（含點外部連結）記住目前捲動位置
+        function saveScroll(){ write(SCROLL_KEY, String(window.scrollY || window.pageYOffset || 0)); }
+        window.addEventListener('pagehide', saveScroll);
+        document.addEventListener('visibilitychange', function(){
+            if (document.visibilityState === 'hidden') saveScroll();
+        });
     })();
 </script>
 
