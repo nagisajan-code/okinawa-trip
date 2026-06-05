@@ -36,6 +36,104 @@
             text-align: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        /* 讓標題文字浮在動畫之上 */
+        .header h1, .header p {
+            position: relative;
+            z-index: 3;
+            margin: 0.3em 0;
+        }
+
+        /* === 動畫圖案（純 CSS / SVG，無外部檔案） === */
+
+        /* 1. 海面上橫渡的郵輪 */
+        .cruise {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            font-size: 28px;
+            line-height: 1;
+            display: inline-block;
+            z-index: 2;
+            animation: sail 16s ease-in-out infinite;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25));
+            will-change: left, transform, opacity;
+        }
+        /* 船的「中心點」只在 8%～92% 之間移動，兩端淡入淡出，
+           因此永遠是完整的一整艘船，不會被 overflow 切半。 */
+        @keyframes sail {
+            0%   { left: 8%;  opacity: 0; transform: translateX(-50%) translateY(0)   rotate(-3deg); }
+            12%  {            opacity: 1; }
+            50%  { left: 50%; opacity: 1; transform: translateX(-50%) translateY(-7px) rotate(3deg); }
+            88%  {            opacity: 1; }
+            100% { left: 92%; opacity: 0; transform: translateX(-50%) translateY(0)   rotate(-3deg); }
+        }
+
+        /* 2. 緩緩飄落的扶桑花 */
+        .petal {
+            position: absolute;
+            top: -30px;
+            font-size: 20px;
+            z-index: 2;
+            opacity: 0.9;
+            animation: fall linear infinite;
+        }
+        .petal:nth-child(1) { left: 12%; animation-duration: 9s;  animation-delay: 0s;   }
+        .petal:nth-child(2) { left: 38%; animation-duration: 12s; animation-delay: 2s;   font-size: 16px; }
+        .petal:nth-child(3) { left: 64%; animation-duration: 10s; animation-delay: 4s;   }
+        .petal:nth-child(4) { left: 85%; animation-duration: 13s; animation-delay: 1.5s; font-size: 14px; }
+        @keyframes fall {
+            0%   { transform: translateY(0) rotate(0deg);    opacity: 0; }
+            10%  { opacity: 0.9; }
+            100% { transform: translateY(160px) rotate(360deg); opacity: 0; }
+        }
+
+        /* 3. 上升的泡泡 */
+        .bubble {
+            position: absolute;
+            bottom: -20px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.35);
+            z-index: 1;
+            animation: rise linear infinite;
+        }
+        .bubble:nth-child(5) { left: 20%; width: 10px; height: 10px; animation-duration: 7s;  }
+        .bubble:nth-child(6) { left: 45%; width: 16px; height: 16px; animation-duration: 9s; animation-delay: 1s; }
+        .bubble:nth-child(7) { left: 70%; width: 8px;  height: 8px;  animation-duration: 6s; animation-delay: 2s; }
+        .bubble:nth-child(8) { left: 90%; width: 12px; height: 12px; animation-duration: 8s; animation-delay: 0.5s; }
+        @keyframes rise {
+            0%   { transform: translateY(0) translateX(0);   opacity: 0; }
+            15%  { opacity: 1; }
+            100% { transform: translateY(-180px) translateX(15px); opacity: 0; }
+        }
+
+        /* 4. 底部波浪（內嵌 SVG，無外部檔案） */
+        .waves {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 28px;
+            z-index: 1;
+        }
+        .waves svg {
+            display: block;
+            width: 200%;
+            height: 100%;
+            animation: wave 8s linear infinite;
+        }
+        @keyframes wave {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+        /* 尊重使用者「減少動態效果」的偏好 */
+        @media (prefers-reduced-motion: reduce) {
+            .cruise, .petal, .bubble, .waves svg { animation: none; }
+            .petal, .bubble { opacity: 0; }
+            .cruise { left: 20px; }
         }
         .card {
             background: var(--card-bg);
@@ -134,14 +232,304 @@
             margin-right: 5px;
             font-weight: bold;
         }
+
+        /* === 起始首頁（Splash 封面） === */
+        .welcome {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #fff;
+            padding: 24px;
+            background: linear-gradient(160deg, #0078D7 0%, #00B4DB 60%, #48D1CC 100%);
+            overflow: hidden;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        /* 點擊後淡出隱藏 */
+        .welcome.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .welcome-logo {
+            line-height: 1;
+            animation: floatLogo 3.5s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+        }
+        .welcome-logo svg {
+            width: 250px;
+            max-width: 82vw;
+            height: auto;
+            display: block;
+        }
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-10px); }
+        }
+        /* 整排小人橫向行進；用兩組相同隊伍接龍，做無縫循環 */
+        .parade { animation: march 7s linear infinite; }
+        @keyframes march {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-230px); }  /* 一組隊伍的寬度 */
+        }
+        .welcome h1 {
+            font-size: 1.9em;
+            margin: 18px 0 6px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .welcome .subtitle {
+            font-size: 1em;
+            opacity: 0.95;
+            max-width: 320px;
+            margin: 0 auto 28px;
+            line-height: 1.7;
+        }
+        .start-btn {
+            background: #fff;
+            color: #0078D7;
+            border: none;
+            padding: 14px 38px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .start-btn:hover {
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 10px 22px rgba(0,0,0,0.28);
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 6px 16px rgba(0,0,0,0.2); }
+            50%      { box-shadow: 0 6px 26px rgba(255,255,255,0.55); }
+        }
+        /* 首頁背景的漂浮裝飾 */
+        .welcome .deco {
+            position: absolute;
+            font-size: 26px;
+            opacity: 0.5;
+            animation: drift linear infinite;
+        }
+        .welcome .deco:nth-child(1) { left:  8%; top: -30px; animation-duration: 11s; }
+        .welcome .deco:nth-child(2) { left: 22%; top: -30px; animation-duration: 14s; animation-delay: 2s;   font-size: 20px; }
+        .welcome .deco:nth-child(3) { left: 36%; top: -30px; animation-duration: 10s; animation-delay: 4s;   }
+        .welcome .deco:nth-child(4) { left: 50%; top: -30px; animation-duration: 13s; animation-delay: 1s;   font-size: 18px; }
+        .welcome .deco:nth-child(5) { left: 63%; top: -30px; animation-duration: 12s; animation-delay: 3s;   }
+        .welcome .deco:nth-child(6) { left: 76%; top: -30px; animation-duration: 15s; animation-delay: 5s;   font-size: 22px; }
+        .welcome .deco:nth-child(7) { left: 88%; top: -30px; animation-duration: 9s;  animation-delay: 1.5s; }
+        .welcome .deco:nth-child(8) { left: 95%; top: -30px; animation-duration: 13s; animation-delay: 3.5s; font-size: 16px; }
+        @keyframes drift {
+            0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10%  { opacity: 0.55; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .welcome-logo, .start-btn, .welcome .deco, .parade { animation: none; }
+            .welcome .deco { opacity: 0; }
+        }
     </style>
 </head>
 <body>
+
+<!-- === 起始首頁 === -->
+<div class="welcome" id="welcome">
+    <span class="deco">🌺</span>
+    <span class="deco">🌸</span>
+    <span class="deco">🌷</span>
+    <span class="deco">🌻</span>
+    <span class="deco">🌼</span>
+    <span class="deco">🏵️</span>
+    <span class="deco">💮</span>
+    <span class="deco">🌹</span>
+
+    <div class="welcome-logo">
+        <!-- 五個小精靈（皮克敏風格的原創二創）：蛋形身、大眼睛、頭頂開沖繩扶桑花、
+             斜背小肩包。手腳以 SMIL 繞關節擺動、花莖走路時晃動，整排橫向行進（兩組接龍無縫循環）。
+             花瓣與身體同色，肩包為固定色，做出與原作的差異。 -->
+        <svg viewBox="0 0 230 140" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="紅、藍、黃、白、紫五個頭戴扶桑花、背著斜肩包的小精靈橫向走動">
+            <defs>
+                <!-- 沖繩扶桑花：5 花瓣同色 + 招牌長花蕊（固定色，整組會隨走路晃動）。
+                     以 SVG <symbol> 無法傳參，故每體型各自內嵌一份對應尺寸。 -->
+
+                <!-- ===== 一般體型（紅、藍、黃）：纖細流線身（下半身收窄，刻意不同於紫色胖身） ===== -->
+                <g id="figNormal">
+                    <!-- 細腿 -->
+                    <line x1="-3" y1="16" x2="-3.5" y2="27" stroke="currentColor" stroke-width="3.4" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" dur="0.66s" repeatCount="indefinite"
+                            values="17 -3 16; -17 -3 16; 17 -3 16"/></line>
+                    <line x1="3" y1="16" x2="3.5" y2="27" stroke="currentColor" stroke-width="3.4" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" dur="0.66s" repeatCount="indefinite"
+                            values="-17 3 16; 17 3 16; -17 3 16"/></line>
+                    <!-- 小短手（根部藏進身體側緣） -->
+                    <line x1="-6" y1="1" x2="-8.5" y2="6" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" dur="0.66s" repeatCount="indefinite"
+                            values="-20 -6 1; 20 -6 1; -20 -6 1"/></line>
+                    <line x1="6" y1="1" x2="8.5" y2="6" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" dur="0.66s" repeatCount="indefinite"
+                            values="20 6 1; -20 6 1; 20 6 1"/></line>
+                    <!-- 纖細流線身體：上方略寬、下半身收窄成尖底 -->
+                    <path d="M0,-18 C6,-18 7.5,-11 7.5,-4 C7.5,2 6.5,9 4.5,15 C3,19 -3,19 -4.5,15
+                             C-6.5,9 -7.5,2 -7.5,-4 C-7.5,-11 -6,-18 0,-18 Z"
+                          fill="currentColor" stroke="rgba(0,0,0,0.18)" stroke-width="1"/>
+                    <!-- 斜肩包（固定色，做出二創差異） -->
+                    <line x1="-5.5" y1="-3" x2="7" y2="11" stroke="#6D4C41" stroke-width="2.8" stroke-linecap="round"/>
+                    <rect x="3.5" y="7" width="8" height="9" rx="2" fill="#5D4037"/>
+                    <rect x="3.5" y="7" width="8" height="3.2" rx="1.4" fill="#8D6E63"/>
+                    <circle cx="7.7" cy="11.6" r="0.85" fill="#D7CCC8"/>
+                    <!-- 大眼睛（位於較窄的上半身） -->
+                    <ellipse cx="-3.2" cy="-7" rx="2.4" ry="3.9" fill="#fff"/><ellipse cx="3.2" cy="-7" rx="2.4" ry="3.9" fill="#fff"/>
+                    <ellipse cx="-3" cy="-6" rx="1.2" ry="2" fill="#1a1a1a"/><ellipse cx="3.4" cy="-6" rx="1.2" ry="2" fill="#1a1a1a"/>
+                    <circle cx="-2.6" cy="-8.2" r="0.6" fill="#fff"/><circle cx="3.8" cy="-8.2" r="0.6" fill="#fff"/>
+                    <!-- 花莖 + 扶桑花（走路時整組晃動） -->
+                    <g>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.66s" repeatCount="indefinite"
+                            values="7 0 -18; -7 0 -18; 7 0 -18"/>
+                        <path d="M0,-18 C-4,-24 4,-29 0,-32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+                        <circle cx="0" cy="-41" r="6" fill="currentColor"/>
+                        <circle cx="6.66" cy="-36.16" r="6" fill="currentColor"/>
+                        <circle cx="4.11" cy="-28.34" r="6" fill="currentColor"/>
+                        <circle cx="-4.11" cy="-28.34" r="6" fill="currentColor"/>
+                        <circle cx="-6.66" cy="-36.16" r="6" fill="currentColor"/>
+                        <circle cx="0" cy="-34" r="2.4" fill="#FFEB3B"/>
+                        <path d="M0,-34 Q4,-30 7,-25" fill="none" stroke="#EF6C00" stroke-width="1.6" stroke-linecap="round"/>
+                        <circle cx="7" cy="-25" r="1.2" fill="#FFF59D"/><circle cx="8.4" cy="-26" r="1.1" fill="#FFF59D"/><circle cx="8" cy="-23" r="1.1" fill="#FFF59D"/>
+                    </g>
+                </g>
+
+                <!-- ===== 白色：最纖瘦矮小（下半身收窄） ===== -->
+                <g id="figWhite">
+                    <line x1="-2.4" y1="13" x2="-2.8" y2="23" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" dur="0.6s" repeatCount="indefinite"
+                            values="17 -2.4 13; -17 -2.4 13; 17 -2.4 13"/></line>
+                    <line x1="2.4" y1="13" x2="2.8" y2="23" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" dur="0.6s" repeatCount="indefinite"
+                            values="-17 2.4 13; 17 2.4 13; -17 2.4 13"/></line>
+                    <line x1="-4.8" y1="1" x2="-7" y2="6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" dur="0.6s" repeatCount="indefinite"
+                            values="-20 -4.8 1; 20 -4.8 1; -20 -4.8 1"/></line>
+                    <line x1="4.8" y1="1" x2="7" y2="6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" dur="0.6s" repeatCount="indefinite"
+                            values="20 4.8 1; -20 4.8 1; 20 4.8 1"/></line>
+                    <!-- 最纖細流線身體：下半身收窄成尖底 -->
+                    <path d="M0,-15 C4.5,-15 6,-9 6,-3 C6,2 5,8 3.5,12.5 C2.3,16 -2.3,16 -3.5,12.5
+                             C-5,8 -6,2 -6,-3 C-6,-9 -4.5,-15 0,-15 Z"
+                          fill="currentColor" stroke="rgba(0,0,0,0.22)" stroke-width="1"/>
+                    <line x1="-4.5" y1="-2" x2="6" y2="9.5" stroke="#6D4C41" stroke-width="2.2" stroke-linecap="round"/>
+                    <rect x="3" y="6" width="6.5" height="7.5" rx="1.6" fill="#5D4037"/>
+                    <rect x="3" y="6" width="6.5" height="2.7" rx="1.2" fill="#8D6E63"/>
+                    <ellipse cx="-2.7" cy="-6" rx="2" ry="3.3" fill="#fff"/><ellipse cx="2.7" cy="-6" rx="2" ry="3.3" fill="#fff"/>
+                    <ellipse cx="-2.5" cy="-5.2" rx="1" ry="1.7" fill="#1a1a1a"/><ellipse cx="2.9" cy="-5.2" rx="1" ry="1.7" fill="#1a1a1a"/>
+                    <circle cx="-2.2" cy="-7" r="0.5" fill="#fff"/><circle cx="3.2" cy="-7" r="0.5" fill="#fff"/>
+                    <g>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.6s" repeatCount="indefinite"
+                            values="7 0 -15; -7 0 -15; 7 0 -15"/>
+                        <path d="M0,-15 C-3.5,-20 3.5,-24 0,-27" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                        <circle cx="0" cy="-35" r="5.2" fill="currentColor"/>
+                        <circle cx="5.7" cy="-30.85" r="5.2" fill="currentColor"/>
+                        <circle cx="3.53" cy="-24.15" r="5.2" fill="currentColor"/>
+                        <circle cx="-3.53" cy="-24.15" r="5.2" fill="currentColor"/>
+                        <circle cx="-5.7" cy="-30.85" r="5.2" fill="currentColor"/>
+                        <circle cx="0" cy="-29" r="2" fill="#FFEB3B"/>
+                        <path d="M0,-29 Q3.5,-25.5 6,-21" fill="none" stroke="#EF6C00" stroke-width="1.4" stroke-linecap="round"/>
+                        <circle cx="6" cy="-21" r="1.1" fill="#FFF59D"/><circle cx="7.2" cy="-22" r="1" fill="#FFF59D"/><circle cx="6.8" cy="-19.3" r="1" fill="#FFF59D"/>
+                    </g>
+                </g>
+
+                <!-- ===== 紫色：圓胖（大球莖、稍胖） ===== -->
+                <g id="figPurple">
+                    <line x1="-4" y1="21" x2="-4.5" y2="32" stroke="currentColor" stroke-width="4.4" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" dur="0.7s" repeatCount="indefinite"
+                            values="16 -4 21; -16 -4 21; 16 -4 21"/></line>
+                    <line x1="4" y1="21" x2="4.5" y2="32" stroke="currentColor" stroke-width="4.4" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" dur="0.7s" repeatCount="indefinite"
+                            values="-16 4 21; 16 4 21; -16 4 21"/></line>
+                    <line x1="-11" y1="5" x2="-14" y2="11" stroke="currentColor" stroke-width="3.4" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" dur="0.7s" repeatCount="indefinite"
+                            values="-18 -11 5; 18 -11 5; -18 -11 5"/></line>
+                    <line x1="11" y1="5" x2="14" y2="11" stroke="currentColor" stroke-width="3.4" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" dur="0.7s" repeatCount="indefinite"
+                            values="18 11 5; -18 11 5; 18 11 5"/></line>
+                    <!-- 圓胖大球莖身體（肚子特別鼓） -->
+                    <path d="M0,-18 C6,-18 8,-11 8,-5 C8,0 14,4 14,11 C14,19 7,24 0,24
+                             C-7,24 -14,19 -14,11 C-14,4 -8,0 -8,-5 C-8,-11 -6,-18 0,-18 Z"
+                          fill="currentColor" stroke="rgba(0,0,0,0.18)" stroke-width="1"/>
+                    <line x1="-7" y1="-2" x2="11" y2="16" stroke="#6D4C41" stroke-width="3.2" stroke-linecap="round"/>
+                    <rect x="7" y="12" width="10" height="10" rx="2.4" fill="#5D4037"/>
+                    <rect x="7" y="12" width="10" height="3.6" rx="1.6" fill="#8D6E63"/>
+                    <circle cx="12" cy="17.5" r="1" fill="#D7CCC8"/>
+                    <ellipse cx="-4" cy="-8" rx="2.5" ry="4" fill="#fff"/><ellipse cx="4" cy="-8" rx="2.5" ry="4" fill="#fff"/>
+                    <ellipse cx="-3.8" cy="-7" rx="1.3" ry="2.1" fill="#1a1a1a"/><ellipse cx="4.2" cy="-7" rx="1.3" ry="2.1" fill="#1a1a1a"/>
+                    <circle cx="-3.4" cy="-9.2" r="0.6" fill="#fff"/><circle cx="4.6" cy="-9.2" r="0.6" fill="#fff"/>
+                    <g>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.7s" repeatCount="indefinite"
+                            values="6 0 -18; -6 0 -18; 6 0 -18"/>
+                        <path d="M0,-18 C-4,-24 4,-29 0,-32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+                        <circle cx="0" cy="-41" r="6" fill="currentColor"/>
+                        <circle cx="6.66" cy="-36.16" r="6" fill="currentColor"/>
+                        <circle cx="4.11" cy="-28.34" r="6" fill="currentColor"/>
+                        <circle cx="-4.11" cy="-28.34" r="6" fill="currentColor"/>
+                        <circle cx="-6.66" cy="-36.16" r="6" fill="currentColor"/>
+                        <circle cx="0" cy="-34" r="2.4" fill="#FFEB3B"/>
+                        <path d="M0,-34 Q4,-30 7,-25" fill="none" stroke="#EF6C00" stroke-width="1.6" stroke-linecap="round"/>
+                        <circle cx="7" cy="-25" r="1.2" fill="#FFF59D"/><circle cx="8.4" cy="-26" r="1.1" fill="#FFF59D"/><circle cx="8" cy="-23" r="1.1" fill="#FFF59D"/>
+                    </g>
+                </g>
+            </defs>
+
+            <!-- 外層固定垂直位置，內層 .parade 負責橫向行進 -->
+            <g transform="translate(0,82)">
+                <g class="parade">
+                    <!-- 第 1 組 -->
+                    <use href="#figNormal" x="20"  style="color:#E53935"/><!-- 紅 -->
+                    <use href="#figNormal" x="66"  style="color:#1E88E5"/><!-- 藍 -->
+                    <use href="#figNormal" x="112" style="color:#FDD835"/><!-- 黃 -->
+                    <use href="#figWhite"  x="158" style="color:#FFFFFF"/><!-- 白（細長矮小） -->
+                    <use href="#figPurple" x="204" style="color:#8E24AA"/><!-- 紫（葫蘆稍胖） -->
+                    <!-- 第 2 組（接龍，與第 1 組相同，相隔一個隊伍寬 230） -->
+                    <use href="#figNormal" x="250" style="color:#E53935"/>
+                    <use href="#figNormal" x="296" style="color:#1E88E5"/>
+                    <use href="#figNormal" x="342" style="color:#FDD835"/>
+                    <use href="#figWhite"  x="388" style="color:#FFFFFF"/>
+                    <use href="#figPurple" x="434" style="color:#8E24AA"/>
+                </g>
+            </g>
+        </svg>
+    </div>
+    <h1>沖繩郵輪靠港<br>快閃二日遊</h1>
+    <p class="subtitle">📅 6/19 — 6/20<br>那霸 · 國際通 · 瀨長島<br>準備好血拚與美景了嗎？</p>
+    <button class="start-btn" id="startBtn">🚀 開始旅程</button>
+</div>
 
 <div class="container">
     <div class="header">
         <h1>🌺 沖繩郵輪靠港快閃二日遊</h1>
         <p>📅 啟程：6/19 13:00 - 6/20 12:00 | 🏨 住宿：Hotel Lantana Naha Kokusai-Dori</p>
+
+        <!-- 動畫圖案：扶桑花飄落 / 泡泡上升 / 郵輪航行 / 波浪 -->
+        <span class="petal">🌺</span>
+        <span class="petal">🌺</span>
+        <span class="petal">🌺</span>
+        <span class="petal">🌺</span>
+        <span class="bubble"></span>
+        <span class="bubble"></span>
+        <span class="bubble"></span>
+        <span class="bubble"></span>
+        <span class="cruise">🚢</span>
+        <div class="waves" aria-hidden="true">
+            <svg viewBox="0 0 1200 28" preserveAspectRatio="none">
+                <path d="M0,14 C150,28 350,0 600,14 C850,28 1050,0 1200,14 L1200,28 L0,28 Z"
+                      fill="rgba(255,255,255,0.30)"></path>
+                <path d="M0,18 C200,4 400,28 600,18 C800,8 1000,28 1200,18 L1200,28 L0,28 Z"
+                      fill="rgba(255,255,255,0.20)"></path>
+            </svg>
+        </div>
     </div>
 
     <!-- 達人專區：最新折扣與旅遊提醒 -->
@@ -274,6 +662,21 @@
     </div>
 
 </div>
+
+<!-- 起始首頁：點按鈕後淡出 -->
+<script>
+    (function () {
+        var welcome = document.getElementById('welcome');
+        var startBtn = document.getElementById('startBtn');
+        function enter() {
+            welcome.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+        // 顯示首頁時鎖住背景捲動
+        document.body.style.overflow = 'hidden';
+        startBtn.addEventListener('click', enter);
+    })();
+</script>
 
 <!-- Service Worker -->
 <script>
