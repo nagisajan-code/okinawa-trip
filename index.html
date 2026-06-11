@@ -7,7 +7,6 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0078D7">
     <link rel="apple-touch-icon" href="icon-192.png">
-    <!-- 本次造訪若已進過行程（例如點外部連結後返回），在繪製前就標記略過首頁，避免閃一下 -->
     <script>try{if(sessionStorage.getItem('okinawaEntered')==='1')document.documentElement.classList.add('skip-welcome');}catch(e){}</script>
     <style>
         :root {
@@ -41,16 +40,13 @@
             position: relative;
             overflow: hidden;
         }
-        /* 讓標題文字浮在動畫之上 */
         .header h1, .header p {
             position: relative;
             z-index: 3;
             margin: 0.3em 0;
         }
 
-        /* === 動畫圖案（純 CSS / SVG，無外部檔案） === */
-
-        /* 1. 海面上橫渡的郵輪 */
+        /* === 動畫圖案 === */
         .cruise {
             position: absolute;
             bottom: 20px;
@@ -63,8 +59,6 @@
             filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25));
             will-change: left, transform, opacity;
         }
-        /* 船的「中心點」只在 8%～92% 之間移動，兩端淡入淡出，
-           因此永遠是完整的一整艘船，不會被 overflow 切半。 */
         @keyframes sail {
             0%   { left: 8%;  opacity: 0; transform: translateX(-50%) translateY(0)   rotate(-3deg); }
             12%  {            opacity: 1; }
@@ -73,7 +67,6 @@
             100% { left: 92%; opacity: 0; transform: translateX(-50%) translateY(0)   rotate(-3deg); }
         }
 
-        /* 2. 緩緩飄落的扶桑花 */
         .petal {
             position: absolute;
             top: -30px;
@@ -92,7 +85,6 @@
             100% { transform: translateY(160px) rotate(360deg); opacity: 0; }
         }
 
-        /* 3. 上升的泡泡 */
         .bubble {
             position: absolute;
             bottom: -20px;
@@ -111,7 +103,6 @@
             100% { transform: translateY(-180px) translateX(15px); opacity: 0; }
         }
 
-        /* 4. 底部波浪（內嵌 SVG，無外部檔案） */
         .waves {
             position: absolute;
             left: 0;
@@ -131,7 +122,6 @@
             to   { transform: translateX(-50%); }
         }
 
-        /* 尊重使用者「減少動態效果」的偏好 */
         @media (prefers-reduced-motion: reduce) {
             .cruise, .petal, .bubble, .waves svg { animation: none; }
             .petal, .bubble { opacity: 0; }
@@ -164,7 +154,6 @@
         .content-area {
             flex-grow: 1;
         }
-        /* 新增：景點專屬快捷按鈕的樣式 */
         .action-links {
             margin-top: 10px;
             display: flex;
@@ -186,13 +175,6 @@
         .action-links a:hover {
             background-color: #B3E5FC;
             transform: translateY(-1px);
-        }
-        .shopping-list {
-            background-color: #FFF3CD;
-            border-left: 5px solid #FFC107;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
         }
         .tools-grid {
             display: grid;
@@ -251,13 +233,11 @@
             overflow: hidden;
             transition: opacity 0.6s ease, visibility 0.6s ease;
         }
-        /* 點擊後淡出隱藏 */
         .welcome.hidden {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
         }
-        /* 返回造訪：直接隱藏首頁、不播放動畫 */
         html.skip-welcome .welcome { display: none !important; }
         .welcome-logo {
             line-height: 1;
@@ -274,11 +254,10 @@
             0%, 100% { transform: translateY(0); }
             50%      { transform: translateY(-10px); }
         }
-        /* 整排小人橫向行進；用兩組相同隊伍接龍，做無縫循環 */
         .parade { animation: march 7s linear infinite; }
         @keyframes march {
             from { transform: translateX(0); }
-            to   { transform: translateX(-230px); }  /* 一組隊伍的寬度 */
+            to   { transform: translateX(-230px); }
         }
         .welcome h1 {
             font-size: 1.9em;
@@ -313,7 +292,6 @@
             0%, 100% { box-shadow: 0 6px 16px rgba(0,0,0,0.2); }
             50%      { box-shadow: 0 6px 26px rgba(255,255,255,0.55); }
         }
-        /* 首頁背景的漂浮裝飾 */
         .welcome .deco {
             position: absolute;
             font-size: 26px;
@@ -353,48 +331,28 @@
     <span class="deco">🌹</span>
 
     <div class="welcome-logo">
-        <!-- 五個小精靈（皮克敏風格的原創二創）：蛋形身、大眼睛、頭頂開沖繩扶桑花、
-             斜背小肩包。手腳以 SMIL 繞關節擺動、花莖走路時晃動，整排橫向行進（兩組接龍無縫循環）。
-             花瓣與身體同色，肩包為固定色，做出與原作的差異。 -->
         <svg viewBox="0 0 230 140" xmlns="http://www.w3.org/2000/svg" role="img"
              aria-label="紅、藍、黃、白、紫五個頭戴扶桑花、背著斜肩包的小精靈橫向走動">
             <defs>
-                <!-- 沖繩扶桑花：5 花瓣同色 + 招牌長花蕊（固定色，整組會隨走路晃動）。
-                     以 SVG <symbol> 無法傳參，故每體型各自內嵌一份對應尺寸。 -->
-
-                <!-- ===== 一般體型（紅、藍、黃）：纖細流線身（下半身收窄，刻意不同於紫色胖身） ===== -->
                 <g id="figNormal">
-                    <!-- 細腿 -->
                     <line x1="-3" y1="16" x2="-3.5" y2="27" stroke="currentColor" stroke-width="3.4" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" dur="0.66s" repeatCount="indefinite"
-                            values="17 -3 16; -17 -3 16; 17 -3 16"/></line>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.66s" repeatCount="indefinite" values="17 -3 16; -17 -3 16; 17 -3 16"/></line>
                     <line x1="3" y1="16" x2="3.5" y2="27" stroke="currentColor" stroke-width="3.4" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" dur="0.66s" repeatCount="indefinite"
-                            values="-17 3 16; 17 3 16; -17 3 16"/></line>
-                    <!-- 小短手（根部藏進身體側緣） -->
+                        <animateTransform attributeName="transform" type="rotate" dur="0.66s" repeatCount="indefinite" values="-17 3 16; 17 3 16; -17 3 16"/></line>
                     <line x1="-6" y1="1" x2="-8.5" y2="6" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" dur="0.66s" repeatCount="indefinite"
-                            values="-20 -6 1; 20 -6 1; -20 -6 1"/></line>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.66s" repeatCount="indefinite" values="-20 -6 1; 20 -6 1; -20 -6 1"/></line>
                     <line x1="6" y1="1" x2="8.5" y2="6" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" dur="0.66s" repeatCount="indefinite"
-                            values="20 6 1; -20 6 1; 20 6 1"/></line>
-                    <!-- 纖細流線身體：上方略寬、下半身收窄成尖底 -->
-                    <path d="M0,-18 C6,-18 7.5,-11 7.5,-4 C7.5,2 6.5,9 4.5,15 C3,19 -3,19 -4.5,15
-                             C-6.5,9 -7.5,2 -7.5,-4 C-7.5,-11 -6,-18 0,-18 Z"
-                          fill="currentColor" stroke="rgba(0,0,0,0.18)" stroke-width="1"/>
-                    <!-- 斜肩包（固定色，做出二創差異） -->
+                        <animateTransform attributeName="transform" type="rotate" dur="0.66s" repeatCount="indefinite" values="20 6 1; -20 6 1; 20 6 1"/></line>
+                    <path d="M0,-18 C6,-18 7.5,-11 7.5,-4 C7.5,2 6.5,9 4.5,15 C3,19 -3,19 -4.5,15 C-6.5,9 -7.5,2 -7.5,-4 C-7.5,-11 -6,-18 0,-18 Z" fill="currentColor" stroke="rgba(0,0,0,0.18)" stroke-width="1"/>
                     <line x1="-5.5" y1="-3" x2="7" y2="11" stroke="#6D4C41" stroke-width="2.8" stroke-linecap="round"/>
                     <rect x="3.5" y="7" width="8" height="9" rx="2" fill="#5D4037"/>
                     <rect x="3.5" y="7" width="8" height="3.2" rx="1.4" fill="#8D6E63"/>
                     <circle cx="7.7" cy="11.6" r="0.85" fill="#D7CCC8"/>
-                    <!-- 大眼睛（位於較窄的上半身） -->
                     <ellipse cx="-3.2" cy="-7" rx="2.4" ry="3.9" fill="#fff"/><ellipse cx="3.2" cy="-7" rx="2.4" ry="3.9" fill="#fff"/>
                     <ellipse cx="-3" cy="-6" rx="1.2" ry="2" fill="#1a1a1a"/><ellipse cx="3.4" cy="-6" rx="1.2" ry="2" fill="#1a1a1a"/>
                     <circle cx="-2.6" cy="-8.2" r="0.6" fill="#fff"/><circle cx="3.8" cy="-8.2" r="0.6" fill="#fff"/>
-                    <!-- 花莖 + 扶桑花（走路時整組晃動） -->
                     <g>
-                        <animateTransform attributeName="transform" type="rotate" dur="0.66s" repeatCount="indefinite"
-                            values="7 0 -18; -7 0 -18; 7 0 -18"/>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.66s" repeatCount="indefinite" values="7 0 -18; -7 0 -18; 7 0 -18"/>
                         <path d="M0,-18 C-4,-24 4,-29 0,-32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
                         <circle cx="0" cy="-41" r="6" fill="currentColor"/>
                         <circle cx="6.66" cy="-36.16" r="6" fill="currentColor"/>
@@ -407,24 +365,16 @@
                     </g>
                 </g>
 
-                <!-- ===== 白色：最纖瘦矮小（下半身收窄） ===== -->
                 <g id="figWhite">
                     <line x1="-2.4" y1="13" x2="-2.8" y2="23" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" dur="0.6s" repeatCount="indefinite"
-                            values="17 -2.4 13; -17 -2.4 13; 17 -2.4 13"/></line>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.6s" repeatCount="indefinite" values="17 -2.4 13; -17 -2.4 13; 17 -2.4 13"/></line>
                     <line x1="2.4" y1="13" x2="2.8" y2="23" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" dur="0.6s" repeatCount="indefinite"
-                            values="-17 2.4 13; 17 2.4 13; -17 2.4 13"/></line>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.6s" repeatCount="indefinite" values="-17 2.4 13; 17 2.4 13; -17 2.4 13"/></line>
                     <line x1="-4.8" y1="1" x2="-7" y2="6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" dur="0.6s" repeatCount="indefinite"
-                            values="-20 -4.8 1; 20 -4.8 1; -20 -4.8 1"/></line>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.6s" repeatCount="indefinite" values="-20 -4.8 1; 20 -4.8 1; -20 -4.8 1"/></line>
                     <line x1="4.8" y1="1" x2="7" y2="6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" dur="0.6s" repeatCount="indefinite"
-                            values="20 4.8 1; -20 4.8 1; 20 4.8 1"/></line>
-                    <!-- 最纖細流線身體：下半身收窄成尖底 -->
-                    <path d="M0,-15 C4.5,-15 6,-9 6,-3 C6,2 5,8 3.5,12.5 C2.3,16 -2.3,16 -3.5,12.5
-                             C-5,8 -6,2 -6,-3 C-6,-9 -4.5,-15 0,-15 Z"
-                          fill="currentColor" stroke="rgba(0,0,0,0.22)" stroke-width="1"/>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.6s" repeatCount="indefinite" values="20 4.8 1; -20 4.8 1; 20 4.8 1"/></line>
+                    <path d="M0,-15 C4.5,-15 6,-9 6,-3 C6,2 5,8 3.5,12.5 C2.3,16 -2.3,16 -3.5,12.5 C-5,8 -6,2 -6,-3 C-6,-9 -4.5,-15 0,-15 Z" fill="currentColor" stroke="rgba(0,0,0,0.22)" stroke-width="1"/>
                     <line x1="-4.5" y1="-2" x2="6" y2="9.5" stroke="#6D4C41" stroke-width="2.2" stroke-linecap="round"/>
                     <rect x="3" y="6" width="6.5" height="7.5" rx="1.6" fill="#5D4037"/>
                     <rect x="3" y="6" width="6.5" height="2.7" rx="1.2" fill="#8D6E63"/>
@@ -432,8 +382,7 @@
                     <ellipse cx="-2.5" cy="-5.2" rx="1" ry="1.7" fill="#1a1a1a"/><ellipse cx="2.9" cy="-5.2" rx="1" ry="1.7" fill="#1a1a1a"/>
                     <circle cx="-2.2" cy="-7" r="0.5" fill="#fff"/><circle cx="3.2" cy="-7" r="0.5" fill="#fff"/>
                     <g>
-                        <animateTransform attributeName="transform" type="rotate" dur="0.6s" repeatCount="indefinite"
-                            values="7 0 -15; -7 0 -15; 7 0 -15"/>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.6s" repeatCount="indefinite" values="7 0 -15; -7 0 -15; 7 0 -15"/>
                         <path d="M0,-15 C-3.5,-20 3.5,-24 0,-27" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
                         <circle cx="0" cy="-35" r="5.2" fill="currentColor"/>
                         <circle cx="5.7" cy="-30.85" r="5.2" fill="currentColor"/>
@@ -446,24 +395,16 @@
                     </g>
                 </g>
 
-                <!-- ===== 紫色：圓胖（大球莖、稍胖） ===== -->
                 <g id="figPurple">
                     <line x1="-4" y1="21" x2="-4.5" y2="32" stroke="currentColor" stroke-width="4.4" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" dur="0.7s" repeatCount="indefinite"
-                            values="16 -4 21; -16 -4 21; 16 -4 21"/></line>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.7s" repeatCount="indefinite" values="16 -4 21; -16 -4 21; 16 -4 21"/></line>
                     <line x1="4" y1="21" x2="4.5" y2="32" stroke="currentColor" stroke-width="4.4" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" dur="0.7s" repeatCount="indefinite"
-                            values="-16 4 21; 16 4 21; -16 4 21"/></line>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.7s" repeatCount="indefinite" values="-16 4 21; 16 4 21; -16 4 21"/></line>
                     <line x1="-11" y1="5" x2="-14" y2="11" stroke="currentColor" stroke-width="3.4" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" dur="0.7s" repeatCount="indefinite"
-                            values="-18 -11 5; 18 -11 5; -18 -11 5"/></line>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.7s" repeatCount="indefinite" values="-18 -11 5; 18 -11 5; -18 -11 5"/></line>
                     <line x1="11" y1="5" x2="14" y2="11" stroke="currentColor" stroke-width="3.4" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" dur="0.7s" repeatCount="indefinite"
-                            values="18 11 5; -18 11 5; 18 11 5"/></line>
-                    <!-- 圓胖大球莖身體（肚子特別鼓） -->
-                    <path d="M0,-18 C6,-18 8,-11 8,-5 C8,0 14,4 14,11 C14,19 7,24 0,24
-                             C-7,24 -14,19 -14,11 C-14,4 -8,0 -8,-5 C-8,-11 -6,-18 0,-18 Z"
-                          fill="currentColor" stroke="rgba(0,0,0,0.18)" stroke-width="1"/>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.7s" repeatCount="indefinite" values="18 11 5; -18 11 5; 18 11 5"/></line>
+                    <path d="M0,-18 C6,-18 8,-11 8,-5 C8,0 14,4 14,11 C14,19 7,24 0,24 C-7,24 -14,19 -14,11 C-14,4 -8,0 -8,-5 C-8,-11 -6,-18 0,-18 Z" fill="currentColor" stroke="rgba(0,0,0,0.18)" stroke-width="1"/>
                     <line x1="-7" y1="-2" x2="11" y2="16" stroke="#6D4C41" stroke-width="3.2" stroke-linecap="round"/>
                     <rect x="7" y="12" width="10" height="10" rx="2.4" fill="#5D4037"/>
                     <rect x="7" y="12" width="10" height="3.6" rx="1.6" fill="#8D6E63"/>
@@ -472,8 +413,7 @@
                     <ellipse cx="-3.8" cy="-7" rx="1.3" ry="2.1" fill="#1a1a1a"/><ellipse cx="4.2" cy="-7" rx="1.3" ry="2.1" fill="#1a1a1a"/>
                     <circle cx="-3.4" cy="-9.2" r="0.6" fill="#fff"/><circle cx="4.6" cy="-9.2" r="0.6" fill="#fff"/>
                     <g>
-                        <animateTransform attributeName="transform" type="rotate" dur="0.7s" repeatCount="indefinite"
-                            values="6 0 -18; -6 0 -18; 6 0 -18"/>
+                        <animateTransform attributeName="transform" type="rotate" dur="0.7s" repeatCount="indefinite" values="6 0 -18; -6 0 -18; 6 0 -18"/>
                         <path d="M0,-18 C-4,-24 4,-29 0,-32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
                         <circle cx="0" cy="-41" r="6" fill="currentColor"/>
                         <circle cx="6.66" cy="-36.16" r="6" fill="currentColor"/>
@@ -486,17 +426,13 @@
                     </g>
                 </g>
             </defs>
-
-            <!-- 外層固定垂直位置，內層 .parade 負責橫向行進 -->
             <g transform="translate(0,82)">
                 <g class="parade">
-                    <!-- 第 1 組 -->
-                    <use href="#figNormal" x="20"  style="color:#E53935"/><!-- 紅 -->
-                    <use href="#figNormal" x="66"  style="color:#1E88E5"/><!-- 藍 -->
-                    <use href="#figNormal" x="112" style="color:#FDD835"/><!-- 黃 -->
-                    <use href="#figWhite"  x="158" style="color:#FFFFFF"/><!-- 白（細長矮小） -->
-                    <use href="#figPurple" x="204" style="color:#8E24AA"/><!-- 紫（葫蘆稍胖） -->
-                    <!-- 第 2 組（接龍，與第 1 組相同，相隔一個隊伍寬 230） -->
+                    <use href="#figNormal" x="20"  style="color:#E53935"/>
+                    <use href="#figNormal" x="66"  style="color:#1E88E5"/>
+                    <use href="#figNormal" x="112" style="color:#FDD835"/>
+                    <use href="#figWhite"  x="158" style="color:#FFFFFF"/>
+                    <use href="#figPurple" x="204" style="color:#8E24AA"/>
                     <use href="#figNormal" x="250" style="color:#E53935"/>
                     <use href="#figNormal" x="296" style="color:#1E88E5"/>
                     <use href="#figNormal" x="342" style="color:#FDD835"/>
@@ -507,16 +443,14 @@
         </svg>
     </div>
     <h1>沖繩郵輪靠港<br>快閃二日遊</h1>
-    <p class="subtitle">📅 6/19 — 6/20<br>那霸 · 國際通 · 瀨長島<br>準備好血拚與美景了嗎？</p>
+    <p class="subtitle">📅 6/19 — 6/20<br>安謝新港 · 御宅尋寶 · 瀨長島夕陽<br>準備好血拚與美景了嗎？</p>
     <button class="start-btn" id="startBtn">🚀 開始旅程</button>
 </div>
 
 <div class="container">
     <div class="header">
-        <h1>🌺 沖繩郵輪靠港快閃二日遊</h1>
-        <p>📅 啟程：6/19 13:00 - 6/20 12:00 | 🏨 住宿：Hotel Lantana Naha Kokusai-Dori</p>
-
-        <!-- 動畫圖案：扶桑花飄落 / 泡泡上升 / 郵輪航行 / 波浪 -->
+        <h1>🌺 沖繩郵輪靠港極速快閃二日遊</h1>
+        <p>📅 啟程：6/19 15:00 - 6/20 11:00 | 🏨 住宿：Hotel Lantana Naha Kokusai-Dori</p>
         <span class="petal">🌺</span>
         <span class="petal">🌺</span>
         <span class="petal">🌺</span>
@@ -528,99 +462,86 @@
         <span class="cruise">🚢</span>
         <div class="waves" aria-hidden="true">
             <svg viewBox="0 0 1200 28" preserveAspectRatio="none">
-                <path d="M0,14 C150,28 350,0 600,14 C850,28 1050,0 1200,14 L1200,28 L0,28 Z"
-                      fill="rgba(255,255,255,0.30)"></path>
-                <path d="M0,18 C200,4 400,28 600,18 C800,8 1000,28 1200,18 L1200,28 L0,28 Z"
-                      fill="rgba(255,255,255,0.20)"></path>
+                <path d="M0,14 C150,28 350,0 600,14 C850,28 1050,0 1200,14 L1200,28 L0,28 Z" fill="rgba(255,255,255,0.30)"></path>
+                <path d="M0,18 C200,4 400,28 600,18 C800,8 1000,28 1200,18 L1200,28 L0,28 Z" fill="rgba(255,255,255,0.20)"></path>
             </svg>
         </div>
     </div>
 
     <!-- 達人專區：最新折扣與旅遊提醒 -->
     <div class="card card-expert">
-        <h2>💡 旅遊達人即時情報 (2026年6月)</h2>
+        <h2>💡 旅遊達人即時情報與提醒</h2>
         <ul style="list-style-type: none; padding-left: 0;">
-            <li>🛍️ <span class="tag-discount">唐吉訶德特價</span> 夏季為「水冷工作服」熱賣期，國際通店設有專區！結帳前請務必手機出示「唐吉訶德旅客專屬 10% 免稅 + 5% 折扣券」圖片。</li>
-            <li>💳 <span class="tag-discount">AEON 優惠</span> 購買運動鞋與皮件前，記得先到小祿 AEON 服務台出示護照，領取外國旅客專屬的「5% OFF 優惠券」，搭配免稅省更多！</li>
-            <li>☀️ <b>氣候與穿著：</b> 6月的沖繩已進入炎夏（均溫 28-32°C），紫外線極強。前往波上宮與瀨長島時，請務必備妥防曬乳、帽子與墨鏡，並攜帶輕便雨具以防午後陣雨。</li>
+            <li>📱 <span class="tag-discount">交通神器 DiDi</span> 沖繩時間就是金錢！建議提前下載 DiDi 日本版，綁定信用卡叫車。安謝新港至商圈約 ¥1,200 起，行程全程建議以計程車代步最有效率。</li>
+            <li>💳 <span class="tag-discount">PARCO CITY 折扣</span> 結帳前請務必至一樓免稅櫃台出示「護照」與「船舶觀光上陸許可證」領取旅客專屬折扣券。松本清等藥妝店更可享最高免稅再 7% OFF 的破盤優惠！</li>
+            <li>☀️ <b>炎夏氣候防護：</b> 6月中旬的沖繩氣溫約 28-32°C 且紫外線毒辣。瀨長島與波上宮皆無太多遮蔽物，請務必備妥高係數防曬、墨鏡並攜帶晴雨傘。</li>
+            <li>🛍️ <b>御宅尋寶無陷阱：</b> 安利美特與駿河屋皆採用日本全國統一的官方定價與中古市場機制，完全不用擔心在觀光熱區被當「盤子」宰！</li>
         </ul>
     </div>
 
     <!-- 行程規劃 Day 1 -->
     <div class="card">
-        <h2>🗓️ Day 1：6/19 (極速踩點與血拚之夜)</h2>
+        <h2>🗓️ Day 1：6/19 (全方位血拚與御宅夜巡)</h2>
         <div class="time-block">
             <div class="time">15:00</div>
             <div class="content-area">
-                <strong>🛳️ 波上宮神社</strong><span class="tag">景點</span><br>
-                最晚15:00完成下島。直接搭乘計程車前往那霸郵輪碼頭旁邊的波上宮（車程約5分鐘）。快速參拜、購買御守，欣賞懸崖上的神社美景。
+                <strong>🚢 安謝新港 ➡️ PARCO CITY 購物戰略</strong><span class="tag">購物</span><br>
+                下船後直接搭乘計程車直達沖繩最大海景商場！<br>
+                🛒 <b>任務 1 (3F)：</b>在 Village Vanguard 與萬代官方直營店搜刮 HOLOLIVE、賽馬娘與皮克敏新品周邊。<br>
+                🛒 <b>任務 2 (2F/3F)：</b>在 Sports Depo 挑選機能跑鞋，或到 ABC-MART GRAND STAGE 尋找限量潮流鞋款。<br>
+                🛒 <b>任務 3 (1F)：</b>在松本清大型旗艦店掃蕩大正百保能、EVE 等止痛藥與常備外傷藥。
                 <div class="action-links">
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=波上宮,那霸" target="_blank">📍 從目前位置導航</a>
-                    <a href="https://www.google.com/search?q=沖繩+波上宮+參拜時間" target="_blank">🔍 相關搜尋</a>
-                    <a href="http://naminouegu.jp/" target="_blank">🌐 官方網站</a>
+                    <a href="https://www.parcocity.jp/" target="_blank">🌐 官方網站與樓層指南</a>
                 </div>
             </div>
         </div>
         <div class="time-block">
-            <div class="time">16:00</div>
+            <div class="time">17:15</div>
             <div class="content-area">
                 <strong>🏨 Hotel Lantana Naha Kokusai-Dori</strong><span class="tag">住宿</span><br>
-                搭乘計程車前往國際通的飯店辦理 Check-in 並卸下行李，讓您雙手空空好逛街！
+                從 PARCO CITY 帶著戰利品搭車前往國際通飯店，迅速辦理 Check-in 並放置行李，讓雙手重獲自由。
                 <div class="action-links">
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=Hotel+Lantana+Naha+Kokusai-Dori" target="_blank">📍 從目前位置導航</a>
-                    <a href="https://www.google.com/search?q=Hotel+Lantana+Naha+Kokusai-Dori+評價" target="_blank">🔍 相關搜尋</a>
-                    <a href="https://hotel-lantana.jp/naha/" target="_blank">🌐 官方網站</a>
+                    <a href="https://hotel-lantana.jp/naha/" target="_blank">🌐 飯店官網</a>
                 </div>
             </div>
         </div>
         <div class="time-block">
-            <div class="time">16:40</div>
+            <div class="time">17:45</div>
             <div class="content-area">
-                <strong>🌅 瀨長島 Umikaji Terrace</strong><span class="tag">景點</span><br>
-                從「縣廳前站」搭乘單軌至「赤嶺站」，轉乘巴士或叫計程車前往。享受希臘風情純白建築，看夕陽與飛機起降。
+                <strong>🌅 瀨長島 Umikaji Terrace 與晚餐</strong><span class="tag">景點 / 美食</span><br>
+                搭車前往擁有希臘風情純白建築的瀨長島，欣賞絕美日落與飛機起降。晚餐可就近選擇免預約的「幸福鬆餅」或排隊名店「泛濫漢堡」。
                 <div class="action-links">
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=瀨長島+Umikaji+Terrace" target="_blank">📍 從目前位置導航</a>
-                    <a href="https://www.google.com/search?q=瀨長島+Umikaji+Terrace+必吃" target="_blank">🔍 相關搜尋</a>
                     <a href="https://www.umikajiterrace.com/" target="_blank">🌐 官方網站</a>
                 </div>
             </div>
         </div>
         <div class="time-block">
-            <div class="time">18:30</div>
+            <div class="time">19:15</div>
             <div class="content-area">
-                <strong>🧸 漫畫倉庫 那霸店</strong><span class="tag">購物</span><br>
-                從瀨長島回到赤嶺站周邊步行前往，這裡是尋寶天堂！<br>
-                🛒 <b>任務：</b>鎖定二手玩具區尋找「賽馬娘公仔」。
+                <strong>⚔️ 安利美特 那霸店 (Animate)</strong><span class="tag">御宅尋寶</span><br>
+                <b>⚠️ 關鍵注意：營業至 20:00！</b> 必須趕在打烊前抵達國際通 Tenbusu 購物中心，做最後的官方新品衝刺，補足 PARCO CITY 沒有的深度周邊。
                 <div class="action-links">
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=マンガ倉庫+那覇店" target="_blank">📍 從目前位置導航</a>
-                    <a href="https://www.google.com/search?q=漫畫倉庫+那霸店+免稅" target="_blank">🔍 相關搜尋</a>
+                    <a href="https://www.animate.co.jp/shop/naha/" target="_blank">🌐 官方網站</a>
+                </div>
+            </div>
+        </div>
+        <div class="time-block">
+            <div class="time">20:00</div>
+            <div class="content-area">
+                <strong>⚔️ 駿河屋 那霸 OPA 店</strong><span class="tag">御宅尋寶</span><br>
+                <b>⚠️ 關鍵注意：營業至 21:00！</b> 從安利美特搭車迅速轉戰旭橋站旁的二手寶庫，尋找 FGO 與賽馬娘的稀有絕版品與卡牌。
+                <div class="action-links">
+                    <a href="https://www.suruga-ya.jp/" target="_blank">🌐 官方網站</a>
+                </div>
+            </div>
+        </div>
+        <div class="time-block">
+            <div class="time">21:00</div>
+            <div class="content-area">
+                <strong>🧸 漫畫倉庫 那霸店</strong><span class="tag">御宅尋寶</span><br>
+                此店為 <b>24 小時營業</b>！毫無時間壓力地前往赤嶺站周邊，在龐大的二手模型與卡牌區瘋狂挖寶至深夜，結束後搭車返回飯店休息。
+                <div class="action-links">
                     <a href="https://mangasouko-okinawa.com/" target="_blank">🌐 官方網站</a>
-                </div>
-            </div>
-        </div>
-        <div class="time-block">
-            <div class="time">19:30</div>
-            <div class="content-area">
-                <strong>🛍️ 小祿 AEON 購物與晚餐</strong><span class="tag">購物</span><br>
-                搭一站單軌或步行抵達。在 AEON 或旁邊的通堂拉麵享用晚餐。<br>
-                🛒 <b>任務：</b>尋找皮克敏周邊、運動鞋、男士皮長夾。
-                <div class="action-links">
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=AEON+那霸店" target="_blank">📍 從目前位置導航</a>
-                    <a href="https://www.google.com/search?q=小祿+AEON+必買" target="_blank">🔍 相關搜尋</a>
-                    <a href="https://www.aeon-ryukyu.jp/store/aeon/naha/" target="_blank">🌐 官方網站</a>
-                </div>
-            </div>
-        </div>
-        <div class="time-block">
-            <div class="time">22:00</div>
-            <div class="content-area">
-                <strong>🐧 唐吉軻德 國際通店</strong><span class="tag">購物</span><br>
-                搭乘單軌回國際通。這家唐吉軻德營業到超晚！<br>
-                🛒 <b>任務：</b>尋找水冷工作服，並完成免稅退稅。
-                <div class="action-links">
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=ドン・キホーテ+那覇国際通り店" target="_blank">📍 從目前位置導航</a>
-                    <a href="https://www.google.com/search?q=唐吉軻德+國際通+退稅" target="_blank">🔍 相關搜尋</a>
-                    <a href="https://www.donki.com/store/shop_detail.php?shop_id=323" target="_blank">🌐 官方網站</a>
                 </div>
             </div>
         </div>
@@ -628,29 +549,40 @@
 
     <!-- 行程規劃 Day 2 -->
     <div class="card">
-        <h2>🗓️ Day 2：6/20 (從容準備回程)</h2>
+        <h2>🗓️ Day 2：6/20 (晨間避開車潮的極速退房攻略)</h2>
+        <div class="time-block">
+            <div class="time">07:30</div>
+            <div class="content-area">
+                <strong>🍳 在地美味早餐</strong><br>
+                步行前往飯店周邊享用沖繩人氣「豬肉蛋飯糰 (Pork Tamago Onigiri) 牧志本店」，或找一間昭和風味咖啡廳品嚐厚片吐司。
+            </div>
+        </div>
         <div class="time-block">
             <div class="time">08:30</div>
             <div class="content-area">
-                <strong>🍳 享用早餐 & 最後補買</strong><br>
-                在飯店周邊享用早餐，若有遺漏的藥妝，可在國際通早上有開的藥妝店快速補齊。
+                <strong>🏨 退房與戰利品上車</strong><br>
+                正值通勤車潮，請提早使用 DiDi 叫車（若行李超過 2 件 28 吋，建議呼叫大型休旅車）。帶上所有戰利品直接退房！
             </div>
         </div>
         <div class="time-block">
-            <div class="time">10:30</div>
+            <div class="time">08:50</div>
             <div class="content-area">
-                <strong>🚕 啟程前往那霸郵輪碼頭</strong><br>
-                強烈建議從飯店直接搭乘計程車前往碼頭（車資約1000-1500日圓），輕鬆省力。
-                <div class="action-links">
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=那覇クルーズターミナル" target="_blank">📍 從目前位置導航至碼頭</a>
-                </div>
+                <strong>⛩️ 波上宮神社 (包車戰術)</strong><span class="tag">景點</span><br>
+                搭車前往建在懸崖上的波上宮。<b>強烈建議請司機原地等候</b>，您與旅伴空手上山參拜、購買紅型護身符，免去提著大行李爬階梯的痛苦。
+            </div>
+        </div>
+        <div class="time-block">
+            <div class="time">09:40</div>
+            <div class="content-area">
+                <strong>🎁 MaxValu 若狹店 (最終補給)</strong><span class="tag">購物</span><br>
+                距離波上宮步行或搭車極近的 24 小時大型超市。以當地人價格進行最後的零食與伴手禮掃貨，買完直接放進等候的計程車後車廂！
             </div>
         </div>
         <div class="time-block" style="border-bottom: none;">
-            <div class="time">12:00</div>
+            <div class="time">11:00</div>
             <div class="content-area">
-                <strong>🚢 郵輪離島</strong><br>
-                最晚12:00離島，帶著滿滿的回憶與戰利品平安返航！
+                <strong>🚢 安謝新港 登船返航</strong><br>
+                完美壓線抵達碼頭！從容辦理安檢手續，回到郵輪上享受午餐，帶著滿滿戰利品平安返航！
             </div>
         </div>
     </div>
@@ -659,7 +591,7 @@
     <div class="card">
         <h3>🛠️ 智慧旅遊全局工具</h3>
         <div class="tools-grid">
-            <a href="https://www.google.com/maps/dir/?api=1&origin=那覇クルーズターミナル&destination=ドン・キホーテ+那覇国際通り店&waypoints=波上宮|ホテルランタナ那覇国際通り|瀬長島ウミカジテラス|マンガ倉庫+那覇店|イオン+那覇店" target="_blank" class="btn-tool">🗺️ 全程路線總覽</a>
+            <a href="https://www.google.com/maps/dir/?api=1&origin=那覇クルーズターミナル&destination=マンガ倉庫+那覇店" target="_blank" class="btn-tool">🗺️ 全程路線總覽</a>
             <a href="https://www.google.com/maps/search/?api=1&query=餐廳" target="_blank" class="btn-tool">🍽️ 搜尋目前周圍餐廳</a>
             <a href="https://www.busnavi-okinawa.com/top/" target="_blank" class="btn-tool">🚆 沖繩公車即時動態</a>
         </div>
@@ -667,7 +599,7 @@
 
 </div>
 
-<!-- 起始首頁：第一次進入才顯示；點外部連結返回時直接略過並回到原位置 -->
+<!-- 起始首頁腳本與 Service Worker 保留與原版相同 -->
 <script>
     (function () {
         var welcome = document.getElementById('welcome');
@@ -678,20 +610,16 @@
         function read(k){ try { return sessionStorage.getItem(k); } catch(e){ return null; } }
         function write(k,v){ try { sessionStorage.setItem(k, v); } catch(e){} }
 
-        // 本次造訪是否已進過行程（由 <head> 的早期腳本標記）
         var skipped = document.documentElement.classList.contains('skip-welcome') || read(ENTER_KEY) === '1';
 
         if (skipped) {
-            // 直接顯示行程，不鎖捲動，並還原離開前的位置
             welcome.style.display = 'none';
             document.body.style.overflow = '';
             var y = parseInt(read(SCROLL_KEY) || '0', 10);
             if (y > 0) {
-                // 等版面就緒後再捲動，確保停在原本點連結的畫面
                 requestAnimationFrame(function(){ window.scrollTo(0, y); });
             }
         } else {
-            // 首次進入：顯示首頁並鎖住背景捲動
             document.body.style.overflow = 'hidden';
         }
 
@@ -701,7 +629,6 @@
             write(ENTER_KEY, '1');
         });
 
-        // 離開頁面前（含點外部連結）記住目前捲動位置
         function saveScroll(){ write(SCROLL_KEY, String(window.scrollY || window.pageYOffset || 0)); }
         window.addEventListener('pagehide', saveScroll);
         document.addEventListener('visibilitychange', function(){
@@ -710,7 +637,6 @@
     })();
 </script>
 
-<!-- Service Worker -->
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
